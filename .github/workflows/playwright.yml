@@ -24,7 +24,7 @@ jobs:
           - name: Install Playwright Browsers
             run: npx playwright install --with-deps
           - name: Run Playwright tests
-            run: npx plawright test
+            run: npx playwright test
           - name: check for required environment variables 
             run: 
                 test -n "$ADMIN_USERNAME" || echo "ADMIN_USERNAME is not set"
