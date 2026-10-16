@@ -25,9 +25,13 @@ jobs:
             run: npx playwright install --with-deps
           - name: Run Playwright tests
             run: npx plawright test
+          - name: check for required environment variables 
+            run: 
+                test -n "$ADMIN_USERNAME" || echo "ADMIN_USERNAME is not set"
+                test -n "$ADMIN_PASSWORD" || echo "ADMIN_PASSWORD is not set"
             env:
-                ADMIN_USERNAME: ${{ secrets.ADMIN_USERNAME }}
-                ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
+                ADMIN_USERNAME: ${{ secrets['ADMIN_USERNAME'] }}
+                ADMIN_PASSWORD: ${{ secrets['ADMIN_PASSWORD'] }}
           - name: Upload Playwright test results
             if: always()
             uses: actions/upload-artifact@v5
