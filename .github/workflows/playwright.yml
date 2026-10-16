@@ -9,16 +9,16 @@ on:
             - main
     schedule:
         - cron: '0 0 * * *' # Runs every day at midnight
-        
+
 jobs:
     test:
         runs-on: ubantu-latest
         steps:
-          - uses: actions/checkout@v3
+          - uses: actions/checkout@v5
           - name: Setup Node.js
-            uses: actions/setup-node@v03
+            uses: actions/setup-node@v5
             with: 
-              node-version: '18'
+              node-version: 24
           - name: Install dependencies
             run: npm install
           - name: Install Playwright Browsers
@@ -30,7 +30,7 @@ jobs:
                 ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
           - name: Upload Playwright test results
             if: always()
-            uses: actions/upload-artifact@v3
+            uses: actions/upload-artifact@v5
             with:
                 name: playwright-results
                 path: playwright-report
@@ -39,7 +39,7 @@ jobs:
             run: npm run allure:generate
           - name: Upload Allure Report
             if: always()
-            uses: actions/upload-artifact@v3
+            uses: actions/upload-artifact@v5
             with:
                 name: allure-report
                 path: allure-report/  
