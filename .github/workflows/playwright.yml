@@ -8,21 +8,22 @@ on:
         branches: 
             - main
     schedule:
-        - cron: '0 0 * * *' # Runs every day at midnight
+        - cron: '30 18 * * *' # 12:00 AM IST
 
 jobs:
     test:
         runs-on: ubuntu-latest
-        env:
-            # non-secret values (repo Variables)
-            BASE_URL: ${{ vars.baseURL }}
-            API_URL: ${{ vars.apiURL }}
-            # secrets (repo Secrets)
-            ADMIN_USERNAME: ${{ secrets.adminUsername }}
-            ADMIN_PASSWORD: ${{ secrets.adminPassword }}
 
+        env:
+          TEST_ENV: qa
+          BASE_URL: ${{ secrets.BASE_URL }}
+          API_URL: ${{ secrets.API_URL }}
+          ADMIN_USERNAME: ${{ secrets.ADMIN_USERNAME }}
+          ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
+        
         steps:
-          - uses: actions/checkout@v6
+          - name: Checkout repository
+            uses: actions/checkout@v6
           
           - name: Setup Node.js
             uses: actions/setup-node@v6
@@ -30,25 +31,23 @@ jobs:
               node-version: 24
               cache: npm
           
-          - name: Verify env vars (safe)
-            run: |
-              # Non-secret: safe to show
-              if [ -z "$baseURL" ]; then echo "BASE_URL is missing"; exit 1; else echo "BASE_URL=$baseURL"; fi
-              if [ -z "$apiURL" ]; then echo "API_URL is missing"; exit 1; else echo "API_URL=$apiURL"; fi
-
-              # Secrets: do NOT print their values; show presence/masked info instead
-              if [ -z "$adminUsername" ]; then echo "ADMIN_USERNAME is missing"; exit 1; else echo "ADMIN_USERNAME present (length=${#adminUsername})"; fi
-              if [ -z "$adminPassword" ]; then echo "ADMIN_PASSWORD is missing"; exit 1; else echo "ADMIN_PASSWORD present (length=${#adminPassword})"; fi
-
           - name: Install dependencies
             run: npm ci
           
           - name: Install Playwright Browsers
             run: npx playwright install --with-deps
+          
+          - name: check for required environment variables 
+            run:
+                test -n "$BASE_URL" || { echo "BASE_URL is not set"; exit 1; } 
+                test -n "$API_URL" || { echo "API_URL is not set"; exit 1; }
+                test -n "$ADMIN_USERNAME" || { echo "ADMIN_USERNAME is not set"; exit 1; }
+                test -n "$ADMIN_PASSWORD" || { echo "ADMIN_PASSWORD is not set"; exit 1; }
+                echo "All required environment variables are set."
 
           - name: Run Playwright tests
             run: npx playwright test
-          
+
           - name: Upload Playwright Report
             if: always()
             uses: actions/upload-artifact@v6
