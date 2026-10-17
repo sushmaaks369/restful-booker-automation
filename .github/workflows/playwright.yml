@@ -16,8 +16,8 @@ jobs:
 
         env:
           TEST_ENV: qa
-          BASE_URL: ${{ secrets.BASE_URL }}
-          API_URL: ${{ secrets.API_URL }}
+          BASE_URL: https://automationintesting.online/
+          API_URL: https://automationintesting.online
           ADMIN_USERNAME: ${{ secrets.ADMIN_USERNAME }}
           ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
         
@@ -46,7 +46,7 @@ jobs:
                 echo "All required environment variables are set."
 
           - name: Run Playwright tests
-            run: npx playwright test
+            run: npm run test:qa
 
           - name: Upload Playwright Report
             if: always()
