@@ -33,12 +33,12 @@ jobs:
           - name: Verify env vars (safe)
             run: |
               # Non-secret: safe to show
-              if [ -z "$BASE_URL" ]; then echo "BASE_URL is missing"; exit 1; else echo "BASE_URL=$BASE_URL"; fi
-              if [ -z "$API_URL" ]; then echo "API_URL is missing"; exit 1; else echo "API_URL=$API_URL"; fi
+              if [ -z "$baseURL" ]; then echo "BASE_URL is missing"; exit 1; else echo "BASE_URL=$baseURL"; fi
+              if [ -z "$apiURL" ]; then echo "API_URL is missing"; exit 1; else echo "API_URL=$apiURL"; fi
 
               # Secrets: do NOT print their values; show presence/masked info instead
-              if [ -z "$ADMIN_USERNAME" ]; then echo "ADMIN_USERNAME is missing"; exit 1; else echo "ADMIN_USERNAME present (length=${#ADMIN_USERNAME})"; fi
-              if [ -z "$ADMIN_PASSWORD" ]; then echo "ADMIN_PASSWORD is missing"; exit 1; else echo "ADMIN_PASSWORD present (length=${#ADMIN_PASSWORD})"; fi
+              if [ -z "$adminUsername" ]; then echo "ADMIN_USERNAME is missing"; exit 1; else echo "ADMIN_USERNAME present (length=${#adminUsername})"; fi
+              if [ -z "$adminPassword" ]; then echo "ADMIN_PASSWORD is missing"; exit 1; else echo "ADMIN_PASSWORD present (length=${#adminPassword})"; fi
 
           - name: Install dependencies
             run: npm ci
