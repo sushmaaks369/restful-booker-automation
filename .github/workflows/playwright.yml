@@ -39,11 +39,13 @@ jobs:
 
           - name: check for required environment variables 
             run: | 
-                test -n "$BASE_URL" || { echo "BASE_URL is not set"; exit 1; } 
-                test -n "$API_URL" || { echo "API_URL is not set"; exit 1; }
-                echo "All required environment variables are set."
-                if [ -z "ADMIN_USERNAME"]||[−z"ADMIN_PASSWORD" ]; then echo "ADMIN_USERNAME or ADMIN_PASSWORD not set — skipping admin-only tests" exit 0 fi 
-                echo "All required environment variables are set."
+              test -n "$BASE_URL" || { echo "BASE_URL is not set"; exit 1; } 
+              test -n "$API_URL" || { echo "API_URL is not set"; exit 1; }
+              if [ -z "$ADMIN_USERNAME" ] || [ -z "$ADMIN_PASSWORD" ]; then
+                echo "ADMIN_USERNAME or ADMIN_PASSWORD not set — skipping admin-only tests"
+                exit 0
+              fi
+              echo "All required environment variables are set."
                 
           - name: Run Playwright tests
             run: npm run test:qa
