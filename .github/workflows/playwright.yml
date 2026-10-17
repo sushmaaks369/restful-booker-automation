@@ -33,6 +33,9 @@ jobs:
               
           - name: Set ADMIN_USERNAME env from secret
             run: echo "ADMIN_USERNAME=${{ secrets.ADMIN_USERNAME }}" >> $GITHUB_ENV
+    
+          - name: Set ADMIN_PASSWORD env from secret
+            run: echo "ADMIN_PASSWORD=${{ secrets.ADMIN_PASSWORD }}" >> $GITHUB_ENV
 
           - name: Install dependencies
             run: npm ci
