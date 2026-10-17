@@ -28,18 +28,23 @@ jobs:
           - name: Install Playwright Browsers
             run: npx playwright install --with-deps
           
-          - name: Run Playwright tests
-            run: npx playwright test
-
           - name: check for required environment variables 
-            run: 
-                test -n "$ADMIN_USERNAME" || echo "ADMIN_USERNAME is not set"
-                test -n "$ADMIN_PASSWORD" || echo "ADMIN_PASSWORD is not set"
+            run:
+                test -n "$BASE_URL" || { echo "BASE_URL is not set"; exit 1; } 
+                test -n "$API_URL" || { echo "API_URL is not set"; exit 1; }
+                test -n "$ADMIN_USERNAME" || { echo "ADMIN_USERNAME is not set"; exit 1; }
+                test -n "$ADMIN_PASSWORD" || { echo "ADMIN_PASSWORD is not set"; exit 1; }
+                echo "All required environment variables are set."
             env:
+                BASE_URL: ${{ secrets['BASE_URL'] }}
+                API_URL: ${{ secrets['API_URL'] }}
                 ADMIN_USERNAME: ${{ secrets['ADMIN_USERNAME'] }}
                 ADMIN_PASSWORD: ${{ secrets['ADMIN_PASSWORD'] }}
 
-          - name: Upload Playwright test results
+          - name: Run Playwright tests
+            run: npx playwright test
+
+          - name: Upload Playwright Report
             if: always()
             uses: actions/upload-artifact@v6
             with:
@@ -64,3 +69,4 @@ jobs:
             with:
                 name: test-results
                 path: test-results/
+                
