@@ -37,16 +37,16 @@ jobs:
           - name: Install Playwright Browsers
             run: npx playwright install --with-deps
           
+          - name: check for required environment variables 
+            run: | 
+              test -n "$BASE_URL" || { echo "BASE_URL is not set"; exit 1; } 
+              test -n "$API_URL" || { echo "API_URL is not set"; exit 1; }
+              test -n "$ADMIN_USERNAME" || { echo "ADMIN_USERNAME is not set"; exit 1; }
+              test -n "$ADMIN_PASSWORD" || { echo "ADMIN_PASSWORD is not set"; exit 1; }
+              echo "All required environment variables are set."
+
           - name: Run Playwright tests
             run: npm run test:qa
-
-          - name: check for required environment variables 
-            run:
-                test -n "$BASE_URL" || { echo "BASE_URL is not set"; exit 1; } 
-                test -n "$API_URL" || { echo "API_URL is not set"; exit 1; }
-                test -n "$ADMIN_USERNAME" || { echo "ADMIN_USERNAME is not set"; exit 1; }
-                test -n "$ADMIN_PASSWORD" || { echo "ADMIN_PASSWORD is not set"; exit 1; }
-                echo "All required environment variables are set."
 
           - name: Upload Playwright Report
             if: always()
