@@ -36,7 +36,7 @@ jobs:
           
           - name: Install Playwright Browsers
             run: npx playwright install --with-deps
-
+          
           - name: check for required environment variables 
             run: | 
               test -n "$BASE_URL" || { echo "BASE_URL is not set"; exit 1; } 
@@ -46,7 +46,7 @@ jobs:
                 exit 0
               fi
               echo "All required environment variables are set."
-                
+              
           - name: Run Playwright tests
             run: npm run test:qa
 
